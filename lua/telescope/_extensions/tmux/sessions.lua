@@ -48,7 +48,7 @@ sessions = function(opts)
 			local entry = action_state.get_selected_entry()
 			local session_id = entry.value
 			local session_display = entry.display
-			vim.ui.input({ prompt = "Kill session '" .. session_display .. "'? [Y/n] " }, function(user_input)
+			vim.ui.input({ prompt = "Kill session? [Y/n] " }, function(user_input)
 				if user_input == "y" or user_input == "" then
 					tutils.get_os_command_output({ "tmux", "kill-session", "-t", session_id })
 					sessions(opts) -- reload sessions

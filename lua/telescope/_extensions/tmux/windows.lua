@@ -41,7 +41,7 @@ windows = function(opts)
 			local entry = action_state.get_selected_entry()
 			local window_id = entry.value
 			local window_display = entry.display
-			vim.ui.input({ prompt = "Kill window '" .. window_display .. "'? [Y/n] " }, function(user_input)
+			vim.ui.input({ prompt = "Kill window? [Y/n] " }, function(user_input)
 				if user_input == "y" or user_input == "" then
 					tmux_commands.kill_window(window_id)
 					windows(opts) -- reload windows
