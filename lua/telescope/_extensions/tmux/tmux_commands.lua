@@ -40,5 +40,10 @@ tmux_commands.kill_window = function(target)
   return tutils.get_os_command_output{"tmux", "kill-window", "-t", target}
 end
 
+tmux_commands.being_in_tmux_session = function()
+  local tmux_variable_content = tutils.get_os_command_output({"printenv", "TMUX"})[1]
+
+  return tmux_variable_content ~= nil
+end
 
 return tmux_commands

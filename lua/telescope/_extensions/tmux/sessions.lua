@@ -18,9 +18,10 @@ local sessions = function(opts)
         formatted_to_real_session_map[v] = session_ids[i]
     end
 
-    -- FIXME: This command can display a session name even if you are in a seperate terminal session that isn't using tmux
-    local current_session = tutils.get_os_command_output({'tmux', 'display-message', '-p', tmux_commands.session_id_fmt})[1]
-    local current_client = tutils.get_os_command_output({'tmux', 'display-message', '-p', '#{client_tty}'})[1]
+  local in_tmux_session = tmux_commands.being_in_tmux_session()
+	local current_session = in_tmux_session and
+		tutils.get_os_command_output({ "tmux", "display-message", "-p", tmux_commands.session_id_fmt })[1] or nil
+	local current_client = tutils.get_os_command_output({ "tmux", "display-message", "-p", "#{client_tty}" })[1]
 
     local custom_actions = transform_mod({
         create_new_session = function(prompt_bufnr)
@@ -49,33 +50,37 @@ local sessions = function(opts)
         end,
     })
 
-
-    pickers.new(opts, {
-        prompt_title = 'Tmux Sessions',
-        finder = finders.new_table {
-            results = user_formatted_session_names,
-            entry_maker = function(result)
-                return {
-                    value = result,
-                    display = result,
-                    ordinal = result,
-                    valid = formatted_to_real_session_map[result] ~=  current_session
-                }
-            end
-        },
-        sorter = sorters.get_generic_fuzzy_sorter(),
-        previewer = previewers.new_termopen_previewer({
-            get_command = function(entry, status)
-                local session_name = formatted_to_real_session_map[entry.value]
-                return {'tmux', 'attach-session', '-t', session_name, '-r'}
-            end
-        }),
-        attach_mappings = function(prompt_bufnr, map)
-            actions.select_default:replace(function()
-                local selection = action_state.get_selected_entry()
-                vim.cmd(string.format('silent !tmux switchc -t "%s" -c "%s"', selection.value, current_client))
-                actions.close(prompt_bufnr)
-            end)
+	pickers
+		.new(opts, {
+			prompt_title = not in_tmux_session and "You are not in a Tmux Session" or "Other Tmux Sessions",
+			finder = finders.new_table({
+				results = user_formatted_session_names,
+				entry_maker = function(result)
+					return {
+						value = result,
+						display = result,
+						ordinal = result,
+						valid = formatted_to_real_session_map[result] ~= current_session,
+					}
+				end,
+			}),
+			sorter = sorters.get_generic_fuzzy_sorter(),
+			previewer = previewers.new_termopen_previewer({
+				get_command = function(entry, status)
+					local session_name = formatted_to_real_session_map[entry.value]
+					return { "tmux", "attach-session", "-t", session_name, "-r" }
+				end,
+			}),
+			attach_mappings = function(prompt_bufnr, map)
+				actions.select_default:replace(function()
+          if not in_tmux_session then
+            print("You are not in a tmux session, switch is not possible")
+          else
+            local selection = action_state.get_selected_entry()
+            vim.cmd(string.format('silent !tmux switchc -t "%s" -c "%s"', selection.value, current_client))
+          end
+					actions.close(prompt_bufnr)
+				end)
 
             actions.close:enhance({
                 post = function ()
