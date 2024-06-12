@@ -8,6 +8,7 @@ local action_state = require('telescope.actions.state')
 local previewers = require('telescope.previewers')
 
 local pane_contents = require'telescope._extensions.tmux.pane_contents'
+local config = require 'telescope._extensions.tmux.config'
 
 local pane_contents_cmd = function(opts)
     local panes = pane_contents.list_panes()
@@ -69,8 +70,8 @@ local pane_contents_cmd = function(opts)
     }):find()
 end
 
-
 return telescope.register_extension {
+    setup = config.setup,
     exports = {
         --sessions = sessions,
         sessions = require'telescope._extensions.tmux.sessions',
