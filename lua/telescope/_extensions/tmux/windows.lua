@@ -12,7 +12,7 @@ local windows = function(_) end -- a bit hacky way to be able to recall windows 
 
 windows = function(opts)
 	local list_windows = tmux_commands.list_windows
-	opts = utils.apply_default_layout(opts)
+	-- opts = utils.apply_default_layout(opts)
 
 	local window_ids = list_windows({ format = tmux_commands.window_id_fmt })
 	local display_windows = list_windows({ format = opts.entry_format or "#S: #W" })
