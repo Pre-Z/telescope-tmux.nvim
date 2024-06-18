@@ -1,1 +1,7 @@
-Session.vim
+*
+
+!.gitignore
+!README.md
+
+!lua/
+!lua/**
