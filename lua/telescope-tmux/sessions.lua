@@ -6,8 +6,8 @@ local actions = require("telescope.actions")
 local action_state = require("telescope.actions.state")
 local previewers = require("telescope.previewers")
 local transform_mod = require("telescope.actions.mt").transform_mod
-local utils = require("telescope._extensions.tmux.utils")
-local tmux_commands = require("telescope._extensions.tmux.tmux_commands")
+local utils = require("telescope-tmux.core.utils")
+local tmux_commands = require("telescope-tmux.core.tmux_commands")
 local sessions = function(_) end -- a bit hacky way to be able to recall sessions for list redraw on sessin kill
 
 -- for debugging purpose
@@ -70,8 +70,8 @@ sessions = function(opts)
 		create_new_session = function(prompt_bufnr)
 			if not in_tmux_session then
 				tmux_opts.notifier(
-					"You are not in a tmux session, switch to the newly created session is not possible",
-					vim.log.levels.WARN
+					"you are not in a tmux session, switch to the newly created session is not possible",
+					vim.log.levels.warn
 				)
 			else
 				local new_session = action_state.get_current_line()
@@ -121,7 +121,7 @@ sessions = function(opts)
 	end
 	pickers
 		.new(vim.tbl_deep_extend("keep", {
-			prompt_title = "Tmux Sessions",
+			prompt_title = "Other Tmux Sessions",
 			finder = finders.new_table({
 				results = user_formatted_session_names,
 				entry_maker = function(result)

@@ -1,6 +1,6 @@
 local utils = {}
 
-utils.init_notifier = function (opts)
+utils.get_notifier = function (opts)
   local notifier
 	if opts.use_nvim_notify == nil or opts.use_nvim_notify then
 		local notify_plugin_available, notify = pcall(require, "notify")
@@ -22,3 +22,4 @@ utils.init_notifier = function (opts)
 end
 
 return utils
+

@@ -1,4 +1,4 @@
-local tutils = require('telescope.utils')
+local utils = require('telescope.utils')
 
 local tmux_commands = {}
 
@@ -14,7 +14,7 @@ tmux_commands.list_windows = function(opts)
     table.insert(cmd, "-F")
     table.insert(cmd, opts.format)
   end
-  return tutils.get_os_command_output(cmd)
+  return utils.get_os_command_output(cmd)
 end
 
 tmux_commands.list_sessions = function(opts)
@@ -23,25 +23,25 @@ tmux_commands.list_sessions = function(opts)
    table.insert(cmd, "-F")
    table.insert(cmd, opts.format)
  end
- return tutils.get_os_command_output(cmd)
+ return utils.get_os_command_output(cmd)
 end
 
 tmux_commands.get_base_index_option = function()
-  return tutils.get_os_command_output{'tmux', 'show-options', '-gv', 'base-index'}[1]
+  return utils.get_os_command_output{'tmux', 'show-options', '-gv', 'base-index'}[1]
 end
 
 tmux_commands.link_window = function(src_window, target_window)
   local src = src_window  or error("src_window is required")
   local target = target_window  or error("target_window is required")
-  return tutils.get_os_command_output{'tmux', 'link-window', "-kd", '-s', src, "-t", target}
+  return utils.get_os_command_output{'tmux', 'link-window', "-kd", '-s', src, "-t", target}
 end
 
 tmux_commands.kill_window = function(target)
-  return tutils.get_os_command_output{"tmux", "kill-window", "-t", target}
+  return utils.get_os_command_output{"tmux", "kill-window", "-t", target}
 end
 
 tmux_commands.being_in_tmux_session = function()
-  local tmux_variable_content = tutils.get_os_command_output({"printenv", "TMUX"})[1]
+  local tmux_variable_content = utils.get_os_command_output({"printenv", "TMUX"})[1]
 
   return tmux_variable_content ~= nil
 end
