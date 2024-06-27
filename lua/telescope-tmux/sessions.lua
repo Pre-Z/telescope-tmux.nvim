@@ -6,7 +6,7 @@ local actions = require("telescope.actions")
 local action_state = require("telescope.actions.state")
 local previewers = require("telescope.previewers")
 local transform_mod = require("telescope.actions.mt").transform_mod
-local utils = require("telescope-tmux.core.utils")
+local utils = require("telescope-tmux.lib.utils")
 local tmux_commands = require("telescope-tmux.core.tmux_commands")
 local sessions = function(_) end -- a bit hacky way to be able to recall sessions for list redraw on sessin kill
 

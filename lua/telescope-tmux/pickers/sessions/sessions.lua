@@ -1,5 +1,5 @@
 local tutils = require("telescope.utils")
-local helper = require("core.helper")
+local helper = require("telescope-tmux.lib.helper")
 
 ---@class TmuxSession
 ---@field list_sessions function

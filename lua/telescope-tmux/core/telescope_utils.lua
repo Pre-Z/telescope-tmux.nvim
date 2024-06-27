@@ -1,16 +1,16 @@
 local action_state = require "telescope.actions.state"
 local telescope_actions = require "telescope.actions"
-local util = require "telescope-tmux.core.utils"
+local util = require "telescope-tmux.lib.utils"
 local previewers = require "telescope.previewers"
 
 local telescope_utils = {}
 
-function telescope_utils.get_attach_mappings_fn(keys)
+function telescope_utils.get_attach_mappings_fn(keys, opts)
   return function(prompt_bufnr, map)
     for key, f in pairs(keys or {}) do
       if key == "<CR>" then
         telescope_actions.select_default:replace(function()
-          f(prompt_bufnr)
+          f(prompt_bufnr, opts)
         end)
       else
         local modes = { "n" }
@@ -19,7 +19,7 @@ function telescope_utils.get_attach_mappings_fn(keys)
         end
         for _, mode in ipairs(modes) do
           map(mode, key, function()
-            f(prompt_bufnr)
+            f(prompt_bufnr, opts)
           end)
         end
       end
